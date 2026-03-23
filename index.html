@@ -1,1179 +1,1236 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Ambio Branding — Intelligence Intake</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
-<style>
-  :root {
-    --cream: #fffaee;
-    --navy: #1b2742;
-    --orange: #ff6731;
-    --navy-light: #2d3f63;
-    --navy-muted: rgba(27,39,66,0.08);
-    --orange-light: rgba(255,103,49,0.10);
-    --radius: 10px;
-    --ease: 0.2s ease;
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    background: var(--cream);
-    color: var(--navy);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-  }
-
-  /* ── HEADER ── */
-  header {
-    background: var(--navy);
-    padding: 24px 48px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .logo-lockup { display: flex; align-items: center; gap: 13px; }
-
-  .logo-icon {
-    width: 40px; height: 40px;
-    border-radius: 50%;
-    background: white;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .logo-text .brand {
-    font-family: 'DM Serif Display', serif;
-    font-size: 20px; color: white; line-height: 1;
-  }
-  .logo-text .sub {
-    font-size: 10.5px; letter-spacing: 0.12em;
-    text-transform: uppercase; color: rgba(255,250,238,0.45);
-    margin-top: 2px;
-  }
-
-  .header-right {
-    color: rgba(255,250,238,0.4);
-    font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase;
-  }
-
-  /* ── MODE TOGGLE BAND ── */
-  .toggle-band {
-    background: var(--navy);
-    border-top: 1px solid rgba(255,250,238,0.08);
-    padding: 0 48px 32px;
-  }
-
-  .toggle-headline {
-    color: var(--cream);
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(24px, 3.5vw, 38px);
-    line-height: 1.15;
-    padding-top: 28px;
-    margin-bottom: 28px;
-    max-width: 600px;
-  }
-
-  .toggle-headline em { font-style: italic; color: var(--orange); }
-
-  .mode-switcher {
-    display: inline-flex;
-    background: rgba(255,250,238,0.07);
-    border-radius: 100px;
-    padding: 5px;
-    gap: 4px;
-    border: 1px solid rgba(255,250,238,0.12);
-  }
-
-  .mode-btn {
-    padding: 9px 22px;
-    border-radius: 100px;
-    border: none;
-    background: transparent;
-    color: rgba(255,250,238,0.5);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.25s ease;
-    letter-spacing: 0.02em;
-    white-space: nowrap;
-  }
-
-  .mode-btn.active {
-    background: var(--orange);
-    color: white;
-    box-shadow: 0 2px 12px rgba(255,103,49,0.4);
-  }
-
-  .mode-btn:not(.active):hover {
-    color: rgba(255,250,238,0.85);
-    background: rgba(255,250,238,0.06);
-  }
-
-  .mode-desc {
-    display: flex;
-    gap: 28px;
-    margin-top: 14px;
-    flex-wrap: wrap;
-  }
-
-  .mode-pill {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    font-size: 12px;
-    color: rgba(255,250,238,0.4);
-    transition: color 0.2s;
-  }
-
-  .mode-pill.active-desc { color: rgba(255,250,238,0.75); }
-
-  .mode-pill-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: rgba(255,250,238,0.2);
-    flex-shrink: 0;
-    transition: background 0.2s;
-  }
-
-  .mode-pill.active-desc .mode-pill-dot { background: var(--orange); }
-
-  /* ── CONTAINER ── */
-  .container {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 48px 32px 80px;
-  }
-
-  /* ── FORM PANELS ── */
-  .form-panel { display: none; }
-  .form-panel.visible { display: block; animation: fadeSlide 0.3s ease; }
-
-  @keyframes fadeSlide {
-    from { opacity: 0; transform: translateY(8px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ── FIELDS ── */
-  .field { display: flex; flex-direction: column; gap: 6px; }
-
-  label {
-    font-size: 11.5px;
-    font-weight: 600;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    color: var(--navy);
-    opacity: 0.7;
-  }
-
-  label .req { color: var(--orange); margin-left: 2px; }
-  label .opt { color: rgba(27,39,66,0.35); font-weight: 400; text-transform: none; letter-spacing: 0; font-size: 11px; margin-left: 4px; }
-
-  input[type="text"],
-  input[type="email"],
-  input[type="url"],
-  input[type="date"],
-  select,
-  textarea {
-    background: white;
-    border: 1.5px solid rgba(27,39,66,0.13);
-    border-radius: 7px;
-    padding: 11px 14px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    color: var(--navy);
-    outline: none;
-    width: 100%;
-    transition: border-color var(--ease), box-shadow var(--ease);
-  }
-
-  input:focus, select:focus, textarea:focus {
-    border-color: var(--orange);
-    box-shadow: 0 0 0 3px var(--orange-light);
-  }
-
-  input.error, select.error, textarea.error {
-    border-color: var(--orange) !important;
-    box-shadow: 0 0 0 3px var(--orange-light) !important;
-  }
-
-  textarea { resize: vertical; min-height: 88px; line-height: 1.6; }
-
-  select {
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231b2742' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 14px center;
-    padding-right: 36px;
-    cursor: pointer;
-  }
-
-  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-  .field-row.single { grid-template-columns: 1fr; }
-  .field-row.thirds { grid-template-columns: 1fr 1fr 1fr; }
-
-  .hint { font-size: 11px; color: rgba(27,39,66,0.38); line-height: 1.5; }
-
-  /* ── SHORT FORM — CARD STACK ── */
-  .quick-stack { display: flex; flex-direction: column; gap: 4px; }
-
-  .quick-card {
-    background: white;
-    border-radius: var(--radius);
-    border: 1.5px solid var(--navy-muted);
-    padding: 22px 26px;
-    transition: border-color var(--ease);
-  }
-
-  .quick-card:focus-within { border-color: rgba(255,103,49,0.35); }
-
-  .quick-card .card-label {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: rgba(27,39,66,0.4);
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .card-label .req-badge {
-    font-size: 10px;
-    background: var(--orange-light);
-    color: var(--orange);
-    padding: 2px 8px;
-    border-radius: 100px;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-  }
-
-  .card-label .opt-badge {
-    font-size: 10px;
-    background: var(--navy-muted);
-    color: rgba(27,39,66,0.45);
-    padding: 2px 8px;
-    border-radius: 100px;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-  }
-
-  /* inline row inside quick card */
-  .quick-inline { display: flex; gap: 12px; }
-  .quick-inline .field { flex: 1; }
-
-  /* ── PILL CHECKBOXES ── */
-  .pill-group { display: flex; flex-wrap: wrap; gap: 7px; }
-  .pill-group input[type="checkbox"] { display: none; }
-  .pill-group label {
-    display: inline-flex;
-    align-items: center;
-    background: var(--cream);
-    border: 1.5px solid rgba(27,39,66,0.16);
-    border-radius: 100px;
-    padding: 6px 13px;
-    font-size: 12.5px;
-    font-weight: 500;
-    letter-spacing: 0.01em;
-    text-transform: none;
-    opacity: 1;
-    color: var(--navy);
-    cursor: pointer;
-    transition: all var(--ease);
-  }
-  .pill-group input[type="checkbox"]:checked + label {
-    background: var(--navy);
-    border-color: var(--navy);
-    color: white;
-  }
-  .pill-group label:hover { border-color: var(--orange); color: var(--orange); }
-  .pill-group input[type="checkbox"]:checked + label:hover { background: var(--navy-light); color: white; }
-
-  /* ── PRIORITY PILLS ── */
-  .priority-group { display: flex; gap: 8px; flex-wrap: wrap; }
-  .priority-group input[type="radio"] { display: none; }
-  .priority-group label {
-    padding: 8px 16px;
-    border-radius: 7px;
-    border: 1.5px solid rgba(27,39,66,0.14);
-    font-size: 12.5px;
-    font-weight: 500;
-    letter-spacing: 0.03em;
-    text-transform: none;
-    opacity: 1;
-    cursor: pointer;
-    transition: all var(--ease);
-  }
-  .priority-group input[value="high"]:checked + label  { background: #fef2ed; border-color: var(--orange); color: var(--orange); }
-  .priority-group input[value="medium"]:checked + label { background: #edf3ff; border-color: #4a6fa5; color: #4a6fa5; }
-  .priority-group input[value="low"]:checked + label   { background: #f0f4f0; border-color: #5a8060; color: #5a8060; }
-  .priority-group label:hover { border-color: var(--orange); }
-
-  /* ── LONG FORM SECTIONS ── */
-  .section { margin-bottom: 44px; }
-
-  .section-label {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-
-  .section-num {
-    background: var(--orange);
-    color: white;
-    width: 26px; height: 26px;
-    border-radius: 50%;
-    font-size: 11.5px;
-    font-weight: 600;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .section-title { font-family: 'DM Serif Display', serif; font-size: 19px; }
-  .section-desc { font-size: 13px; color: rgba(27,39,66,0.5); margin-top: 2px; font-weight: 300; }
-
-  .long-card {
-    background: white;
-    border-radius: var(--radius);
-    border: 1.5px solid var(--navy-muted);
-    padding: 26px 30px;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-  }
-
-  .divider { border: none; border-top: 1.5px solid var(--navy-muted); }
-
-  /* ── UPLOAD ZONE ── */
-  .upload-zone {
-    border: 2px dashed rgba(27,39,66,0.18);
-    border-radius: var(--radius);
-    padding: 28px 20px;
-    text-align: center;
-    background: var(--cream);
-    cursor: pointer;
-    transition: all var(--ease);
-    position: relative;
-  }
-  .upload-zone:hover, .upload-zone.dragover { border-color: var(--orange); background: var(--orange-light); }
-  .upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-  .upload-zone p { font-size: 13.5px; color: var(--navy); font-weight: 500; margin-top: 10px; }
-  .upload-zone span { font-size: 11.5px; color: rgba(27,39,66,0.4); }
-  .file-name-display { font-size: 12px; color: var(--orange); font-weight: 500; margin-top: 6px; }
-
-  .upload-icon {
-    width: 38px; height: 38px;
-    background: var(--navy-muted);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto;
-  }
-
-  /* ── SUBMIT AREA ── */
-  .submit-area {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-top: 36px;
-    padding-top: 32px;
-    border-top: 1.5px solid var(--navy-muted);
-  }
-
-  .submit-note { font-size: 12px; color: rgba(27,39,66,0.4); max-width: 340px; line-height: 1.6; }
-
-  button[type="submit"] {
-    background: var(--orange);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 14px 36px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14.5px;
-    font-weight: 600;
-    cursor: pointer;
-    letter-spacing: 0.02em;
-    transition: background var(--ease), transform var(--ease), box-shadow var(--ease);
-    box-shadow: 0 4px 14px rgba(255,103,49,0.28);
-  }
-
-  button[type="submit"]:hover {
-    background: #e5541f;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(255,103,49,0.38);
-  }
-
-  button[type="submit"]:active { transform: translateY(0); }
-
-  /* ── SUCCESS BANNER ── */
-  .success-banner {
-    display: none;
-    background: var(--navy);
-    color: white;
-    border-radius: var(--radius);
-    padding: 20px 26px;
-    margin-bottom: 28px;
-    align-items: center;
-    gap: 14px;
-    border-left: 4px solid var(--orange);
-  }
-  .success-banner.show { display: flex; animation: fadeSlide 0.3s ease; }
-  .success-icon { width: 32px; height: 32px; background: var(--orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .success-text p { font-weight: 600; font-size: 14px; }
-  .success-text span { font-size: 12px; opacity: 0.55; }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 620px) {
-    header { padding: 18px 22px; }
-    .toggle-band { padding: 0 22px 28px; }
-    .container { padding: 32px 18px 60px; }
-    .field-row, .field-row.thirds { grid-template-columns: 1fr; }
-    .quick-inline { flex-direction: column; }
-    .header-right { display: none; }
-  }
-
-  /* ── PASSWORD GATE ── */
-  #gate { position:fixed; inset:0; background:var(--navy); display:flex; align-items:center; justify-content:center; z-index:9999; padding:24px; }
-  #gate.hidden { display:none; }
-  .gate-box { background:var(--cream); border-radius:14px; padding:48px 44px; max-width:420px; width:100%; text-align:center; box-shadow:0 24px 60px rgba(0,0,0,0.35); }
-  .gate-logo { width:52px; height:52px; border-radius:50%; background:var(--navy); display:flex; align-items:center; justify-content:center; margin:0 auto 20px; }
-  .gate-box h2 { font-family:"DM Serif Display",serif; font-size:24px; color:var(--navy); margin-bottom:6px; }
-  .gate-box p { font-size:13.5px; color:rgba(27,39,66,0.5); margin-bottom:28px; line-height:1.6; }
-  #gate-password { width:100%; background:white; border:1.5px solid rgba(27,39,66,0.15); border-radius:8px; padding:13px 16px; font-family:"DM Sans",sans-serif; font-size:15px; color:var(--navy); outline:none; letter-spacing:0.08em; text-align:center; margin-bottom:10px; transition:border-color 0.2s,box-shadow 0.2s; }
-  #gate-password:focus { border-color:var(--orange); box-shadow:0 0 0 3px var(--orange-light); }
-  #gate-password.shake { animation:shake 0.4s ease; border-color:#c0392b; }
-  @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-6px)} 80%{transform:translateX(6px)} }
-  #gate-error { font-size:12.5px; color:#c0392b; margin-bottom:12px; min-height:18px; font-weight:500; }
-  #gate-submit { width:100%; background:var(--orange); color:white; border:none; border-radius:8px; padding:13px; font-family:"DM Sans",sans-serif; font-size:14.5px; font-weight:600; cursor:pointer; transition:background 0.2s,transform 0.15s; box-shadow:0 4px 14px rgba(255,103,49,0.28); }
-  #gate-submit:hover { background:#e5541f; transform:translateY(-1px); }
-  .gate-hint { font-size:11.5px; color:rgba(27,39,66,0.35); margin-top:18px; line-height:1.5; }
-  #page-content { display:none; }
-  #page-content.unlocked { display:block; }
-</style>
-</head>
-<body>
-
-<!-- PASSWORD GATE -->
-<div id="gate">
-  <div class="gate-box">
-    <div class="gate-logo">
-      <svg viewBox="0 0 36 36" width="28" height="28" fill="none"><circle cx="18" cy="18" r="17" fill="#1a5cff"/><path d="M18 1 C9.163 1 2 8.163 2 17 C2 25.837 9.163 33 18 33 Z" fill="white"/></svg>
-    </div>
-    <h2>Ambio Intelligence</h2>
-    <p>This form is for authorized Ambio partners only.<br>Enter your access password to continue.</p>
-    <input type="password" id="gate-password" placeholder="Enter password" autocomplete="current-password" />
-    <div id="gate-error"></div>
-    <button id="gate-submit">Unlock →</button>
-    <div class="gate-hint">Contact the Ambio team if you need access.</div>
-  </div>
-</div>
-
-<!-- PAGE CONTENT -->
-<div id="page-content">
-
-<!-- HEADER -->
-<header>
-  <div class="logo-lockup">
-    <div class="logo-icon">
-      <svg viewBox="0 0 36 36" width="30" height="30" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="18" cy="18" r="17" fill="#1a5cff"/>
-        <path d="M18 1 C9.163 1 2 8.163 2 17 C2 25.837 9.163 33 18 33 Z" fill="white"/>
-      </svg>
-    </div>
-    <div class="logo-text">
-      <div class="brand">Ambio Branding</div>
-      <div class="sub">Intelligence Intake</div>
-    </div>
-  </div>
-  <div class="header-right">Business Development · Weekly Report</div>
-</header>
-
-<!-- TOGGLE BAND -->
-<div class="toggle-band">
-  <div class="toggle-headline">
-    What are you <em>submitting</em> today?
-  </div>
-
-  <div class="mode-switcher">
-    <button class="mode-btn active" id="btn-quick" onclick="switchMode('quick')">⚡ Quick Drop</button>
-    <button class="mode-btn" id="btn-full" onclick="switchMode('full')">📋 Full Submission</button>
-  </div>
-
-  <div class="mode-desc">
-    <div class="mode-pill active-desc" id="desc-quick">
-      <div class="mode-pill-dot"></div>
-      5 fields · under 2 minutes
-    </div>
-    <div class="mode-pill" id="desc-full">
-      <div class="mode-pill-dot"></div>
-      Full detail · outreach angles · rolodex upload
-    </div>
-  </div>
-</div>
-
-<!-- MAIN -->
-<div class="container">
-
-  <!-- ══════════════════════════════
-       QUICK DROP FORM
-  ══════════════════════════════ -->
-  <form id="form-quick" class="form-panel visible" novalidate>
-
-    <div id="success-quick" class="success-banner">
-      <div class="success-icon">
-        <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M3 9l4.5 4.5 7.5-9" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="success-text">
-        <p>Intel dropped. Thanks!</p>
-        <span>This will be reviewed for the next weekly report cycle.</span>
-      </div>
-    </div>
-
-    <div class="quick-stack">
-
-      <!-- Who -->
-      <div class="quick-card">
-        <div class="card-label">Who's submitting <span class="req-badge">Required</span></div>
-        <div class="quick-inline">
-          <div class="field">
-            <input type="text" name="q_name" placeholder="Your name" required />
-          </div>
-          <div class="field">
-            <select name="q_role" required>
-              <option value="" disabled selected>Your role</option>
-              <option>Ambio Branding — Founder</option>
-              <option>Molly Waller Consulting — Partner</option>
-              <option>Field Day Studios — Partner</option>
-              <option>Ambio Team Member</option>
-              <option>Other</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <!-- Company -->
-      <div class="quick-card">
-        <div class="card-label">Company you're reporting on <span class="req-badge">Required</span></div>
-        <div class="quick-inline">
-          <div class="field">
-            <input type="text" name="q_company" placeholder="Target company name" required />
-          </div>
-          <div class="field">
-            <select name="q_status">
-              <option value="" disabled selected>Their status (optional)</option>
-              <option>Current Client</option>
-              <option>Former Client</option>
-              <option>Prospect — Warm</option>
-              <option>Prospect — Cold</option>
-              <option>Competitor to Watch</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <!-- Signal -->
-      <div class="quick-card">
-        <div class="card-label">What happened? <span class="req-badge">Required</span></div>
-        <div class="pill-group" style="margin-bottom:12px;" id="q-signal-group">
-          <input type="checkbox" id="qs1" name="q_signal[]" value="Executive / Leadership Change" />
-          <label for="qs1">Leadership Change</label>
-          <input type="checkbox" id="qs2" name="q_signal[]" value="M&A or Acquisition" />
-          <label for="qs2">M&A / Acquisition</label>
-          <input type="checkbox" id="qs3" name="q_signal[]" value="Funding Round" />
-          <label for="qs3">Funding Round</label>
-          <input type="checkbox" id="qs4" name="q_signal[]" value="Rebrand" />
-          <label for="qs4">Rebrand</label>
-          <input type="checkbox" id="qs5" name="q_signal[]" value="Product Launch" />
-          <label for="qs5">Product Launch</label>
-          <input type="checkbox" id="qs6" name="q_signal[]" value="Agency Shift" />
-          <label for="qs6">Agency Shift</label>
-          <input type="checkbox" id="qs7" name="q_signal[]" value="Partnership" />
-          <label for="qs7">Partnership</label>
-          <input type="checkbox" id="qs8" name="q_signal[]" value="Other" />
-          <label for="qs8">Other</label>
-          <input type="checkbox" id="qs9" name="q_signal[]" value="PE Firm Outreach" />
-          <label for="qs9">PE Firm Reached Out to Ambio</label>
-        </div>
-        <textarea name="q_description" placeholder="Quick summary — what happened?" required style="min-height:72px;"></textarea>
-      </div>
-
-      <!-- Ambio Connection -->
-      <div class="quick-card">
-        <div class="card-label">Ambio connection <span class="req-badge">Required</span></div>
-        <select name="q_connection" required>
-          <option value="" disabled selected>Select the closest match</option>
-          <option>Executive came from an Ambio client</option>
-          <option>Shared PE firm or investor with an Ambio client</option>
-          <option>Merging with / acquiring an Ambio client</option>
-          <option>Shared board member with an Ambio client</option>
-          <option>Personal / direct referral</option>
-          <option>Haveli broker contact</option>
-          <option>No known connection</option>
-        </select>
-      </div>
-
-      <!-- Optional extras -->
-      <div class="quick-card">
-        <div class="card-label">Anything else? <span class="opt-badge">Optional</span></div>
-        <div class="field" style="margin-bottom:12px;">
-          <div style="font-size:12px; color:rgba(27,39,66,0.5); margin-bottom:8px;">Suggested priority</div>
-          <div class="priority-group">
-            <input type="radio" name="q_priority" id="qp_high" value="high" />
-            <label for="qp_high">🔴 Reach Out Now</label>
-            <input type="radio" name="q_priority" id="qp_med" value="medium" />
-            <label for="qp_med">🟡 Monitor Closely</label>
-            <input type="radio" name="q_priority" id="qp_low" value="low" />
-            <label for="qp_low">🟢 Long-Term Watch</label>
-          </div>
-        </div>
-        <div class="field">
-          <input type="text" name="q_source" placeholder="Source URL (optional)" />
-        </div>
-      </div>
-
-    </div><!-- /quick-stack -->
-
-    <div class="submit-area">
-      <div class="submit-note">Takes under 2 minutes. Need to add more detail? Switch to Full Submission above.</div>
-      <button type="submit">Drop Intel →</button>
-    </div>
-
-  </form>
-
-
-  <!-- ══════════════════════════════
-       FULL SUBMISSION FORM
-  ══════════════════════════════ -->
-  <form id="form-full" class="form-panel" novalidate>
-
-    <div id="success-full" class="success-banner">
-      <div class="success-icon">
-        <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M3 9l4.5 4.5 7.5-9" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="success-text">
-        <p>Full submission received.</p>
-        <span>This will be prioritized in the next weekly report cycle.</span>
-      </div>
-    </div>
-
-    <!-- 1. Who -->
-    <div class="section">
-      <div class="section-label">
-        <div class="section-num">1</div>
-        <div>
-          <div class="section-title">Who's Submitting</div>
-          <div class="section-desc">So we know where this intel is coming from.</div>
-        </div>
-      </div>
-      <div class="long-card">
-        <div class="field-row">
-          <div class="field">
-            <label>Your Name <span class="req">*</span></label>
-            <input type="text" name="f_name" placeholder="e.g. Sarah Ambio" required />
-          </div>
-          <div class="field">
-            <label>Your Role <span class="req">*</span></label>
-            <select name="f_role" required>
-              <option value="" disabled selected>Select your role</option>
-              <option>Ambio Branding — Founder</option>
-              <option>Molly Waller Consulting — Partner</option>
-              <option>Field Day Studios — Partner</option>
-              <option>Ambio Team Member</option>
-              <option>Other</option>
-            </select>
-          </div>
-        </div>
-        <div class="field-row">
-          <div class="field">
-            <label>Email <span class="opt">(optional)</span></label>
-            <input type="email" name="f_email" placeholder="you@ambiobranding.com" />
-          </div>
-          <div class="field">
-            <label>Date</label>
-            <input type="date" name="f_date" id="f_date" />
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 2. Company -->
-    <div class="section">
-      <div class="section-label">
-        <div class="section-num">2</div>
-        <div>
-          <div class="section-title">Company You're Reporting On</div>
-          <div class="section-desc">Tell us about the target company — not your own.</div>
-        </div>
-      </div>
-      <div class="long-card">
-        <div class="field-row">
-          <div class="field">
-            <label>Company Name <span class="req">*</span></label>
-            <input type="text" name="f_company" placeholder="e.g. Numerator" required />
-          </div>
-          <div class="field">
-            <label>Company Status</label>
-            <select name="f_status">
-              <option value="" disabled selected>Select status</option>
-              <option>Current Client</option>
-              <option>Former Client</option>
-              <option>Prospect — Warm</option>
-              <option>Prospect — Cold</option>
-              <option>Competitor to Watch</option>
-              <option>Other</option>
-            </select>
-          </div>
-        </div>
-        <div class="field-row">
-          <div class="field">
-            <label>Product Category / Vertical</label>
-            <input type="text" name="f_category" placeholder="e.g. HR Tech, FinTech, MarTech" />
-          </div>
-          <div class="field">
-            <label>PE Firm</label>
-            <select name="f_pe">
-              <option value="" disabled selected>Select or leave blank</option>
-              <option>Vista Equity</option>
-              <option>Thoma Bravo</option>
-              <option>Bain Capital</option>
-              <option>KKR</option>
-              <option>Advent International</option>
-              <option>Madison Dearborn</option>
-              <option>Francisco Partners</option>
-              <option>Carlyle</option>
-              <option>TA Associates</option>
-              <option>Roper Technologies</option>
-              <option>Haveli Investments</option>
-              <option>Other / Unknown</option>
-            </select>
-          </div>
-        </div>
-        <div class="field">
-          <label>Company Website or LinkedIn <span class="opt">(optional)</span></label>
-          <input type="url" name="f_url" placeholder="https://" />
-        </div>
-      </div>
-    </div>
-
-    <!-- 3. Signal -->
-    <div class="section">
-      <div class="section-label">
-        <div class="section-num">3</div>
-        <div>
-          <div class="section-title">Signal or Triggering Event</div>
-          <div class="section-desc">What happened? Select all that apply and describe.</div>
-        </div>
-      </div>
-      <div class="long-card">
-        <div class="field">
-          <label>Signal Type(s) <span class="req">*</span></label>
-          <div class="pill-group" id="f-signal-group" style="margin-top:4px;">
-            <input type="checkbox" id="fs1" name="f_signal[]" value="Executive / Leadership Change" />
-            <label for="fs1">Leadership Change</label>
-            <input type="checkbox" id="fs2" name="f_signal[]" value="M&A or Acquisition" />
-            <label for="fs2">M&A / Acquisition</label>
-            <input type="checkbox" id="fs3" name="f_signal[]" value="Funding Round" />
-            <label for="fs3">Funding Round</label>
-            <input type="checkbox" id="fs4" name="f_signal[]" value="Rebrand or Brand Refresh" />
-            <label for="fs4">Rebrand</label>
-            <input type="checkbox" id="fs5" name="f_signal[]" value="Product Launch or Expansion" />
-            <label for="fs5">Product Launch</label>
-            <input type="checkbox" id="fs6" name="f_signal[]" value="Agency of Record Shift" />
-            <label for="fs6">Agency Shift</label>
-            <input type="checkbox" id="fs7" name="f_signal[]" value="New Partnership" />
-            <label for="fs7">Partnership</label>
-            <input type="checkbox" id="fs8" name="f_signal[]" value="Geographic Expansion" />
-            <label for="fs8">Geo Expansion</label>
-            <input type="checkbox" id="fs9" name="f_signal[]" value="Other" />
-            <label for="fs9">Other</label>
-            <input type="checkbox" id="fs10" name="f_signal[]" value="PE Firm Outreach" />
-            <label for="fs10">PE Firm Reached Out to Ambio</label>
-          </div>
-        </div>
-        <div class="field">
-          <label>Describe the Event <span class="req">*</span></label>
-          <textarea name="f_description" placeholder="What happened? Include names, dates, and any relevant context." required></textarea>
-        </div>
-        <div class="field-row">
-          <div class="field">
-            <label>Approximate Event Date</label>
-            <input type="date" name="f_event_date" />
-          </div>
-          <div class="field">
-            <label>Source URL <span class="opt">(optional)</span></label>
-            <input type="url" name="f_source" placeholder="https://" />
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 4. Connection -->
-    <div class="section">
-      <div class="section-label">
-        <div class="section-num">4</div>
-        <div>
-          <div class="section-title">Ambio Connection</div>
-          <div class="section-desc">Is there a traceable relationship to Ambio's ecosystem?</div>
-        </div>
-      </div>
-      <div class="long-card">
-        <div class="field">
-          <label>Connection Type <span class="req">*</span></label>
-          <select name="f_connection" required>
-            <option value="" disabled selected>Select the closest match</option>
-            <option>Executive came from an Ambio client</option>
-            <option>Shared PE firm or investor with an Ambio client</option>
-            <option>Merging with / acquiring an Ambio client</option>
-            <option>Shared board member with an Ambio client</option>
-            <option>Personal / direct referral</option>
-            <option>Haveli broker contact</option>
-            <option>No known connection</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Connection Details <span class="opt">(optional)</span></label>
-          <textarea name="f_connection_detail" placeholder="Names, prior company, role, how you found out — anything specific helps." style="min-height:72px;"></textarea>
-        </div>
-      </div>
-    </div>
-
-    <!-- 5. Your Take — OPTIONAL -->
-    <div class="section">
-      <div class="section-label">
-        <div class="section-num">5</div>
-        <div>
-          <div class="section-title">Your Take <span style="font-family:'DM Sans',sans-serif; font-size:12px; font-weight:400; color:rgba(27,39,66,0.4); margin-left:8px;">— Optional</span></div>
-          <div class="section-desc">Skip this if you're short on time. Add it if you have a recommendation.</div>
-        </div>
-      </div>
-      <div class="long-card">
-        <div class="field">
-          <label>Suggested Priority</label>
-          <div class="priority-group" style="margin-top:4px;">
-            <input type="radio" name="f_priority" id="fp_high" value="high" />
-            <label for="fp_high">🔴 Reach Out Now</label>
-            <input type="radio" name="f_priority" id="fp_med" value="medium" />
-            <label for="fp_med">🟡 Monitor Closely</label>
-            <input type="radio" name="f_priority" id="fp_low" value="low" />
-            <label for="fp_low">🟢 Long-Term Watch</label>
-          </div>
-        </div>
-        <div class="field">
-          <label>Recommended Outreach Angle</label>
-          <textarea name="f_outreach" placeholder="How should Ambio approach this? What's the opening line or service to lead with?" style="min-height:76px;"></textarea>
-        </div>
-        <div class="field">
-          <label>Additional Notes</label>
-          <textarea name="f_notes" placeholder="Timing considerations, risks, context — anything else we should know." style="min-height:64px;"></textarea>
-        </div>
-      </div>
-    </div>
-
-    <!-- 6. New Client / Rolodex — OPTIONAL -->
-    <div class="section">
-      <div class="section-label">
-        <div class="section-num">6</div>
-        <div>
-          <div class="section-title">New Client or Rolodex Update <span style="font-family:'DM Sans',sans-serif; font-size:12px; font-weight:400; color:rgba(27,39,66,0.4); margin-left:8px;">— Optional</span></div>
-          <div class="section-desc">Adding a new client to the roster, or uploading a fresh Client Rolodex? Do it here.</div>
-        </div>
-      </div>
-      <div class="long-card">
-        <div class="field-row">
-          <div class="field">
-            <label>New Client Name</label>
-            <input type="text" name="f_new_client" placeholder="Company name" />
-          </div>
-          <div class="field">
-            <label>Engagement Start Date</label>
-            <input type="date" name="f_engage_date" />
-          </div>
-        </div>
-        <div class="field">
-          <label>New Client Details</label>
-          <textarea name="f_new_client_detail" placeholder="Services, scope, key contacts, anything relevant for the BD report." style="min-height:72px;"></textarea>
-        </div>
-        <hr class="divider" />
-        <div class="field">
-          <label>Upload Updated Rolodex <span class="opt">(optional)</span></label>
-          <div class="upload-zone" id="upload-zone">
-            <input type="file" name="f_rolodex" id="rolodex-file" accept=".xlsx,.xls,.csv" />
-            <div class="upload-icon">
-              <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 13V4M6 8l4-4 4 4" stroke="#1b2742" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 14v1.5A1.5 1.5 0 004.5 17h11a1.5 1.5 0 001.5-1.5V14" stroke="#1b2742" stroke-width="1.8" stroke-linecap="round"/></svg>
-            </div>
-            <p>Drag & drop or click to browse</p>
-            <span>Accepts .xlsx, .xls, .csv</span>
-            <div class="file-name-display" id="file-name"></div>
-          </div>
-          <div class="hint" style="margin-top:6px;">Only upload if you have a full updated rolodex. Use the fields above for individual clients.</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="submit-area">
-      <div class="submit-note">Your full submission will be prioritized in the next report cycle. All information stays internal.</div>
-      <button type="submit">Submit Full Report →</button>
-    </div>
-
-  </form>
-
-</div><!-- /container -->
-
-<script>
-  // ── Set today's date
-  document.getElementById('f_date').valueAsDate = new Date();
-
-  // ── Mode switch
-  function switchMode(mode) {
-    const isQuick = mode === 'quick';
-
-    document.getElementById('form-quick').classList.toggle('visible', isQuick);
-    document.getElementById('form-full').classList.toggle('visible', !isQuick);
-
-    document.getElementById('btn-quick').classList.toggle('active', isQuick);
-    document.getElementById('btn-full').classList.toggle('active', !isQuick);
-
-    document.getElementById('desc-quick').classList.toggle('active-desc', isQuick);
-    document.getElementById('desc-full').classList.toggle('active-desc', !isQuick);
-
-    // Update dot styles
-    document.querySelectorAll('.mode-pill-dot').forEach((dot, i) => {
-      dot.style.background = (isQuick && i === 0) || (!isQuick && i === 1)
-        ? 'var(--orange)'
-        : 'rgba(255,250,238,0.2)';
-    });
-  }
-
-  // ── File upload display
-  document.getElementById('rolodex-file').addEventListener('change', function() {
-    const name = this.files[0]?.name;
-    document.getElementById('file-name').textContent = name ? '📎 ' + name : '';
-  });
-
-  const zone = document.getElementById('upload-zone');
-  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
-  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
-  zone.addEventListener('drop', e => {
-    e.preventDefault();
-    zone.classList.remove('dragover');
-    const file = e.dataTransfer.files[0];
-    if (file) {
-      document.getElementById('rolodex-file').files = e.dataTransfer.files;
-      document.getElementById('file-name').textContent = '📎 ' + file.name;
-    }
-  });
-
-  // ── PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE ──────────
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyEgTu8YbEcbczN65tFYBMWTt6oSa54a7A8bXJaRyJvH-BDbm0kxsZeMCmf_kbs4NVY/exec';
-  // ─────────────────────────────────────────────────────────────
-
-  // ── Validation helper
-  function validateForm(form, signalGroupId) {
-    let valid = true;
-
-    form.querySelectorAll('[required]').forEach(field => {
-      field.classList.remove('error');
-      if (!field.value.trim()) {
-        field.classList.add('error');
-        valid = false;
-      }
-    });
-
-    // Require at least one signal pill
-    const signals = form.querySelectorAll('input[type="checkbox"]:checked');
-    if (signals.length === 0) {
-      const group = document.getElementById(signalGroupId);
-      if (group) {
-        group.style.outline = '2px solid var(--orange)';
-        group.style.borderRadius = '8px';
-        group.style.padding = '6px';
-        valid = false;
-        setTimeout(() => { group.style.outline = ''; group.style.padding = ''; }, 2500);
-      }
-    }
-
-    return valid;
-  }
-
-  // ── Set button to loading state
-  function setLoading(btn, isLoading) {
-    btn.disabled = isLoading;
-    btn.textContent = isLoading ? 'Sending…' : btn.dataset.label;
-    btn.style.opacity = isLoading ? '0.7' : '1';
-  }
-
-  // ── POST to Google Sheets
-  async function sendToSheets(payload) {
-    const res = await fetch(SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify(payload)
-    });
-    const json = await res.json();
-    if (json.status !== 'success') throw new Error(json.message || 'Unknown error');
-  }
-
-  // ── Show success banner
-  function showSuccess(bannerId, form, extraReset) {
-    const banner = document.getElementById(bannerId);
-    banner.classList.add('show');
-    form.reset();
-    if (extraReset) extraReset();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    setTimeout(() => banner.classList.remove('show'), 8000);
-  }
-
-  // ── Show inline error
-  function showError(bannerId, msg) {
-    const banner = document.getElementById(bannerId);
-    banner.style.borderLeftColor = '#c0392b';
-    banner.querySelector('p').textContent = 'Something went wrong.';
-    banner.querySelector('span').textContent = msg || 'Please try again or contact the Ambio team.';
-    banner.querySelector('.success-icon').style.background = '#c0392b';
-    banner.classList.add('show');
-    setTimeout(() => {
-      banner.classList.remove('show');
-      banner.style.borderLeftColor = '';
-      banner.querySelector('.success-icon').style.background = '';
-    }, 8000);
-  }
-
-  // Store button labels
-  document.querySelectorAll('button[type="submit"]').forEach(btn => {
-    btn.dataset.label = btn.textContent;
-  });
-
-  // ── QUICK FORM ───────────────────────────────────────────────
-  document.getElementById('form-quick').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    if (!validateForm(this, 'q-signal-group')) {
-      this.querySelector('.error')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      return;
-    }
-
-    const btn = this.querySelector('button[type="submit"]');
-    setLoading(btn, true);
-
-    const signals = [...this.querySelectorAll('input[name="q_signal[]"]:checked')]
-      .map(cb => cb.value).join(', ');
-
-    const payload = {
-      formType:    'quick',
-      name:        this.q_name.value,
-      role:        this.q_role.value,
-      company:     this.q_company.value,
-      status:      this.q_status.value,
-      signals,
-      description: this.q_description.value,
-      connection:  this.q_connection.value,
-      priority:    this.querySelector('input[name="q_priority"]:checked')?.value || '',
-      source:      this.q_source.value
-    };
-
-    try {
-      await sendToSheets(payload);
-      showSuccess('success-quick', this);
-    } catch (err) {
-      showError('success-quick', err.message);
-    } finally {
-      setLoading(btn, false);
-    }
-  });
-
-  // ── FULL FORM ────────────────────────────────────────────────
-  document.getElementById('form-full').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    if (!validateForm(this, 'f-signal-group')) {
-      this.querySelector('.error')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      return;
-    }
-
-    const btn = this.querySelector('button[type="submit"]');
-    setLoading(btn, true);
-
-    const signals = [...this.querySelectorAll('input[name="f_signal[]"]:checked')]
-      .map(cb => cb.value).join(', ');
-
-    const rolodexFile = document.getElementById('rolodex-file').files[0];
-
-    const payload = {
-      formType:          'full',
-      name:              this.f_name.value,
-      role:              this.f_role.value,
-      email:             this.f_email.value,
-      submissionDate:    this.f_date.value,
-      company:           this.f_company.value,
-      status:            this.f_status.value,
-      category:          this.f_category.value,
-      peFirm:            this.f_pe.value,
-      companyUrl:        this.f_url.value,
-      signals,
-      description:       this.f_description.value,
-      eventDate:         this.f_event_date.value,
-      sourceUrl:         this.f_source.value,
-      connectionType:    this.f_connection.value,
-      connectionDetail:  this.f_connection_detail.value,
-      priority:          this.querySelector('input[name="f_priority"]:checked')?.value || '',
-      outreach:          this.f_outreach.value,
-      notes:             this.f_notes.value,
-      newClient:         this.f_new_client.value,
-      engageDate:        this.f_engage_date.value,
-      newClientDetail:   this.f_new_client_detail.value,
-      rolodexFileName:   rolodexFile ? rolodexFile.name : ''
-    };
-
-    try {
-      await sendToSheets(payload);
-      showSuccess('success-full', this, () => {
-        document.getElementById('f_date').valueAsDate = new Date();
-        document.getElementById('file-name').textContent = '';
-      });
-    } catch (err) {
-      showError('success-full', err.message);
-    } finally {
-      setLoading(btn, false);
-    }
-  });
-
-  // ── PASSWORD GATE ──────────────────────────────────────────
-  const CORRECT_PASSWORD = "ClaireDanes2026!";
-  const SESSION_KEY = "ambio_intake_auth";
-
-  function unlock() {
-    document.getElementById("gate").classList.add("hidden");
-    document.getElementById("page-content").classList.add("unlocked");
-    sessionStorage.setItem(SESSION_KEY, "1");
-  }
-
-  // Auto-unlock if already authenticated this session
-  if (sessionStorage.getItem(SESSION_KEY) === "1") { unlock(); }
-
-  document.getElementById("gate-submit").addEventListener("click", function() {
-    const val = document.getElementById("gate-password").value;
-    const errEl = document.getElementById("gate-error");
-    const input = document.getElementById("gate-password");
-    if (val === CORRECT_PASSWORD) {
-      unlock();
-    } else {
-      errEl.textContent = "Incorrect password. Please try again.";
-      input.classList.remove("shake");
-      void input.offsetWidth;
-      input.classList.add("shake");
-      input.value = "";
-      setTimeout(() => { input.classList.remove("shake"); errEl.textContent = ""; }, 2500);
-    }
-  });
-
-  document.getElementById("gate-password").addEventListener("keydown", function(e) {
-    if (e.key === "Enter") document.getElementById("gate-submit").click();
-  });
-</script>
-</div><!-- /page-content -->
-</body>
-</html>
+{\rtf1\ansi\ansicpg1252\cocoartf2709
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 <!DOCTYPE html>\
+<html lang="en">\
+<head>\
+<meta charset="UTF-8" />\
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />\
+<title>Ambio Branding \'97 Intelligence Intake</title>\
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />\
+<style>\
+  :root \{\
+    --cream: #fffaee;\
+    --navy: #1b2742;\
+    --orange: #ff6731;\
+    --navy-light: #2d3f63;\
+    --navy-muted: rgba(27,39,66,0.08);\
+    --orange-light: rgba(255,103,49,0.10);\
+    --radius: 10px;\
+    --ease: 0.2s ease;\
+  \}\
+\
+  *, *::before, *::after \{ box-sizing: border-box; margin: 0; padding: 0; \}\
+\
+  body \{\
+    background: var(--cream);\
+    color: var(--navy);\
+    font-family: 'DM Sans', sans-serif;\
+    min-height: 100vh;\
+  \}\
+\
+  /* \uc0\u9472 \u9472  HEADER \u9472 \u9472  */\
+  header \{\
+    background: var(--navy);\
+    padding: 24px 48px;\
+    display: flex;\
+    align-items: center;\
+    justify-content: space-between;\
+  \}\
+\
+  .logo-lockup \{ display: flex; align-items: center; gap: 13px; \}\
+\
+  .logo-icon \{\
+    width: 40px; height: 40px;\
+    border-radius: 50%;\
+    background: white;\
+    display: flex; align-items: center; justify-content: center;\
+    flex-shrink: 0;\
+  \}\
+\
+  .logo-text .brand \{\
+    font-family: 'DM Serif Display', serif;\
+    font-size: 20px; color: white; line-height: 1;\
+  \}\
+  .logo-text .sub \{\
+    font-size: 10.5px; letter-spacing: 0.12em;\
+    text-transform: uppercase; color: rgba(255,250,238,0.45);\
+    margin-top: 2px;\
+  \}\
+\
+  .header-right \{\
+    color: rgba(255,250,238,0.4);\
+    font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase;\
+  \}\
+\
+  /* \uc0\u9472 \u9472  MODE TOGGLE BAND \u9472 \u9472  */\
+  .toggle-band \{\
+    background: var(--navy);\
+    border-top: 1px solid rgba(255,250,238,0.08);\
+    padding: 0 48px 32px;\
+  \}\
+\
+  .toggle-headline \{\
+    color: var(--cream);\
+    font-family: 'DM Serif Display', serif;\
+    font-size: clamp(24px, 3.5vw, 38px);\
+    line-height: 1.15;\
+    padding-top: 28px;\
+    margin-bottom: 28px;\
+    max-width: 600px;\
+  \}\
+\
+  .toggle-headline em \{ font-style: italic; color: var(--orange); \}\
+\
+  .mode-switcher \{\
+    display: inline-flex;\
+    background: rgba(255,250,238,0.07);\
+    border-radius: 100px;\
+    padding: 5px;\
+    gap: 4px;\
+    border: 1px solid rgba(255,250,238,0.12);\
+  \}\
+\
+  .mode-btn \{\
+    padding: 9px 22px;\
+    border-radius: 100px;\
+    border: none;\
+    background: transparent;\
+    color: rgba(255,250,238,0.5);\
+    font-family: 'DM Sans', sans-serif;\
+    font-size: 13px;\
+    font-weight: 500;\
+    cursor: pointer;\
+    transition: all 0.25s ease;\
+    letter-spacing: 0.02em;\
+    white-space: nowrap;\
+  \}\
+\
+  .mode-btn.active \{\
+    background: var(--orange);\
+    color: white;\
+    box-shadow: 0 2px 12px rgba(255,103,49,0.4);\
+  \}\
+\
+  .mode-btn:not(.active):hover \{\
+    color: rgba(255,250,238,0.85);\
+    background: rgba(255,250,238,0.06);\
+  \}\
+\
+  .mode-desc \{\
+    display: flex;\
+    gap: 28px;\
+    margin-top: 14px;\
+    flex-wrap: wrap;\
+  \}\
+\
+  .mode-pill \{\
+    display: flex;\
+    align-items: center;\
+    gap: 7px;\
+    font-size: 12px;\
+    color: rgba(255,250,238,0.4);\
+    transition: color 0.2s;\
+  \}\
+\
+  .mode-pill.active-desc \{ color: rgba(255,250,238,0.75); \}\
+\
+  .mode-pill-dot \{\
+    width: 6px; height: 6px;\
+    border-radius: 50%;\
+    background: rgba(255,250,238,0.2);\
+    flex-shrink: 0;\
+    transition: background 0.2s;\
+  \}\
+\
+  .mode-pill.active-desc .mode-pill-dot \{ background: var(--orange); \}\
+\
+  /* \uc0\u9472 \u9472  CONTAINER \u9472 \u9472  */\
+  .container \{\
+    max-width: 860px;\
+    margin: 0 auto;\
+    padding: 48px 32px 80px;\
+  \}\
+\
+  /* \uc0\u9472 \u9472  FORM PANELS \u9472 \u9472  */\
+  .form-panel \{ display: none; \}\
+  .form-panel.visible \{ display: block; animation: fadeSlide 0.3s ease; \}\
+\
+  @keyframes fadeSlide \{\
+    from \{ opacity: 0; transform: translateY(8px); \}\
+    to   \{ opacity: 1; transform: translateY(0); \}\
+  \}\
+\
+  /* \uc0\u9472 \u9472  FIELDS \u9472 \u9472  */\
+  .field \{ display: flex; flex-direction: column; gap: 6px; \}\
+\
+  label \{\
+    font-size: 11.5px;\
+    font-weight: 600;\
+    letter-spacing: 0.07em;\
+    text-transform: uppercase;\
+    color: var(--navy);\
+    opacity: 0.7;\
+  \}\
+\
+  label .req \{ color: var(--orange); margin-left: 2px; \}\
+  label .opt \{ color: rgba(27,39,66,0.35); font-weight: 400; text-transform: none; letter-spacing: 0; font-size: 11px; margin-left: 4px; \}\
+\
+  input[type="text"],\
+  input[type="email"],\
+  input[type="url"],\
+  input[type="date"],\
+  select,\
+  textarea \{\
+    background: white;\
+    border: 1.5px solid rgba(27,39,66,0.13);\
+    border-radius: 7px;\
+    padding: 11px 14px;\
+    font-family: 'DM Sans', sans-serif;\
+    font-size: 14px;\
+    color: var(--navy);\
+    outline: none;\
+    width: 100%;\
+    transition: border-color var(--ease), box-shadow var(--ease);\
+  \}\
+\
+  input:focus, select:focus, textarea:focus \{\
+    border-color: var(--orange);\
+    box-shadow: 0 0 0 3px var(--orange-light);\
+  \}\
+\
+  input.error, select.error, textarea.error \{\
+    border-color: var(--orange) !important;\
+    box-shadow: 0 0 0 3px var(--orange-light) !important;\
+  \}\
+\
+  textarea \{ resize: vertical; min-height: 88px; line-height: 1.6; \}\
+\
+  select \{\
+    appearance: none;\
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231b2742' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");\
+    background-repeat: no-repeat;\
+    background-position: right 14px center;\
+    padding-right: 36px;\
+    cursor: pointer;\
+  \}\
+\
+  .field-row \{ display: grid; grid-template-columns: 1fr 1fr; gap: 18px; \}\
+  .field-row.single \{ grid-template-columns: 1fr; \}\
+  .field-row.thirds \{ grid-template-columns: 1fr 1fr 1fr; \}\
+\
+  .hint \{ font-size: 11px; color: rgba(27,39,66,0.38); line-height: 1.5; \}\
+\
+  /* \uc0\u9472 \u9472  SHORT FORM \'97 CARD STACK \u9472 \u9472  */\
+  .quick-stack \{ display: flex; flex-direction: column; gap: 4px; \}\
+\
+  .quick-card \{\
+    background: white;\
+    border-radius: var(--radius);\
+    border: 1.5px solid var(--navy-muted);\
+    padding: 22px 26px;\
+    transition: border-color var(--ease);\
+  \}\
+\
+  .quick-card:focus-within \{ border-color: rgba(255,103,49,0.35); \}\
+\
+  .quick-card .card-label \{\
+    font-size: 11px;\
+    font-weight: 600;\
+    letter-spacing: 0.1em;\
+    text-transform: uppercase;\
+    color: rgba(27,39,66,0.4);\
+    margin-bottom: 10px;\
+    display: flex;\
+    align-items: center;\
+    justify-content: space-between;\
+  \}\
+\
+  .card-label .req-badge \{\
+    font-size: 10px;\
+    background: var(--orange-light);\
+    color: var(--orange);\
+    padding: 2px 8px;\
+    border-radius: 100px;\
+    font-weight: 600;\
+    letter-spacing: 0.05em;\
+  \}\
+\
+  .card-label .opt-badge \{\
+    font-size: 10px;\
+    background: var(--navy-muted);\
+    color: rgba(27,39,66,0.45);\
+    padding: 2px 8px;\
+    border-radius: 100px;\
+    font-weight: 500;\
+    letter-spacing: 0.05em;\
+  \}\
+\
+  /* inline row inside quick card */\
+  .quick-inline \{ display: flex; gap: 12px; \}\
+  .quick-inline .field \{ flex: 1; \}\
+\
+  /* \uc0\u9472 \u9472  PILL CHECKBOXES \u9472 \u9472  */\
+  .pill-group \{ display: flex; flex-wrap: wrap; gap: 7px; \}\
+  .pill-group input[type="checkbox"] \{ display: none; \}\
+  .pill-group label \{\
+    display: inline-flex;\
+    align-items: center;\
+    background: var(--cream);\
+    border: 1.5px solid rgba(27,39,66,0.16);\
+    border-radius: 100px;\
+    padding: 6px 13px;\
+    font-size: 12.5px;\
+    font-weight: 500;\
+    letter-spacing: 0.01em;\
+    text-transform: none;\
+    opacity: 1;\
+    color: var(--navy);\
+    cursor: pointer;\
+    transition: all var(--ease);\
+  \}\
+  .pill-group input[type="checkbox"]:checked + label \{\
+    background: var(--navy);\
+    border-color: var(--navy);\
+    color: white;\
+  \}\
+  .pill-group label:hover \{ border-color: var(--orange); color: var(--orange); \}\
+  .pill-group input[type="checkbox"]:checked + label:hover \{ background: var(--navy-light); color: white; \}\
+\
+  /* \uc0\u9472 \u9472  PRIORITY PILLS \u9472 \u9472  */\
+  .priority-group \{ display: flex; gap: 8px; flex-wrap: wrap; \}\
+  .priority-group input[type="radio"] \{ display: none; \}\
+  .priority-group label \{\
+    padding: 8px 16px;\
+    border-radius: 7px;\
+    border: 1.5px solid rgba(27,39,66,0.14);\
+    font-size: 12.5px;\
+    font-weight: 500;\
+    letter-spacing: 0.03em;\
+    text-transform: none;\
+    opacity: 1;\
+    cursor: pointer;\
+    transition: all var(--ease);\
+  \}\
+  .priority-group input[value="high"]:checked + label  \{ background: #fef2ed; border-color: var(--orange); color: var(--orange); \}\
+  .priority-group input[value="medium"]:checked + label \{ background: #edf3ff; border-color: #4a6fa5; color: #4a6fa5; \}\
+  .priority-group input[value="low"]:checked + label   \{ background: #f0f4f0; border-color: #5a8060; color: #5a8060; \}\
+  .priority-group label:hover \{ border-color: var(--orange); \}\
+\
+  /* \uc0\u9472 \u9472  LONG FORM SECTIONS \u9472 \u9472  */\
+  .section \{ margin-bottom: 44px; \}\
+\
+  .section-label \{\
+    display: flex;\
+    align-items: center;\
+    gap: 12px;\
+    margin-bottom: 20px;\
+  \}\
+\
+  .section-num \{\
+    background: var(--orange);\
+    color: white;\
+    width: 26px; height: 26px;\
+    border-radius: 50%;\
+    font-size: 11.5px;\
+    font-weight: 600;\
+    display: flex; align-items: center; justify-content: center;\
+    flex-shrink: 0;\
+  \}\
+\
+  .section-title \{ font-family: 'DM Serif Display', serif; font-size: 19px; \}\
+  .section-desc \{ font-size: 13px; color: rgba(27,39,66,0.5); margin-top: 2px; font-weight: 300; \}\
+\
+  .long-card \{\
+    background: white;\
+    border-radius: var(--radius);\
+    border: 1.5px solid var(--navy-muted);\
+    padding: 26px 30px;\
+    display: flex;\
+    flex-direction: column;\
+    gap: 18px;\
+  \}\
+\
+  .divider \{ border: none; border-top: 1.5px solid var(--navy-muted); \}\
+\
+  /* \uc0\u9472 \u9472  UPLOAD ZONE \u9472 \u9472  */\
+  .upload-zone \{\
+    border: 2px dashed rgba(27,39,66,0.18);\
+    border-radius: var(--radius);\
+    padding: 28px 20px;\
+    text-align: center;\
+    background: var(--cream);\
+    cursor: pointer;\
+    transition: all var(--ease);\
+    position: relative;\
+  \}\
+  .upload-zone:hover, .upload-zone.dragover \{ border-color: var(--orange); background: var(--orange-light); \}\
+  .upload-zone input[type="file"] \{ position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; \}\
+  .upload-zone p \{ font-size: 13.5px; color: var(--navy); font-weight: 500; margin-top: 10px; \}\
+  .upload-zone span \{ font-size: 11.5px; color: rgba(27,39,66,0.4); \}\
+  .file-name-display \{ font-size: 12px; color: var(--orange); font-weight: 500; margin-top: 6px; \}\
+\
+  .upload-icon \{\
+    width: 38px; height: 38px;\
+    background: var(--navy-muted);\
+    border-radius: 50%;\
+    display: flex; align-items: center; justify-content: center;\
+    margin: 0 auto;\
+  \}\
+\
+  /* \uc0\u9472 \u9472  SUBMIT AREA \u9472 \u9472  */\
+  .submit-area \{\
+    display: flex;\
+    align-items: center;\
+    justify-content: space-between;\
+    gap: 20px;\
+    flex-wrap: wrap;\
+    margin-top: 36px;\
+    padding-top: 32px;\
+    border-top: 1.5px solid var(--navy-muted);\
+  \}\
+\
+  .submit-note \{ font-size: 12px; color: rgba(27,39,66,0.4); max-width: 340px; line-height: 1.6; \}\
+\
+  button[type="submit"] \{\
+    background: var(--orange);\
+    color: white;\
+    border: none;\
+    border-radius: 8px;\
+    padding: 14px 36px;\
+    font-family: 'DM Sans', sans-serif;\
+    font-size: 14.5px;\
+    font-weight: 600;\
+    cursor: pointer;\
+    letter-spacing: 0.02em;\
+    transition: background var(--ease), transform var(--ease), box-shadow var(--ease);\
+    box-shadow: 0 4px 14px rgba(255,103,49,0.28);\
+  \}\
+\
+  button[type="submit"]:hover \{\
+    background: #e5541f;\
+    transform: translateY(-1px);\
+    box-shadow: 0 6px 18px rgba(255,103,49,0.38);\
+  \}\
+\
+  button[type="submit"]:active \{ transform: translateY(0); \}\
+\
+  /* \uc0\u9472 \u9472  SUCCESS BANNER \u9472 \u9472  */\
+  .success-banner \{\
+    display: none;\
+    background: var(--navy);\
+    color: white;\
+    border-radius: var(--radius);\
+    padding: 20px 26px;\
+    margin-bottom: 28px;\
+    align-items: center;\
+    gap: 14px;\
+    border-left: 4px solid var(--orange);\
+  \}\
+  .success-banner.show \{ display: flex; animation: fadeSlide 0.3s ease; \}\
+  .success-icon \{ width: 32px; height: 32px; background: var(--orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; \}\
+  .success-text p \{ font-weight: 600; font-size: 14px; \}\
+  .success-text span \{ font-size: 12px; opacity: 0.55; \}\
+\
+  /* \uc0\u9472 \u9472  RESPONSIVE \u9472 \u9472  */\
+  @media (max-width: 620px) \{\
+    header \{ padding: 18px 22px; \}\
+    .toggle-band \{ padding: 0 22px 28px; \}\
+    .container \{ padding: 32px 18px 60px; \}\
+    .field-row, .field-row.thirds \{ grid-template-columns: 1fr; \}\
+    .quick-inline \{ flex-direction: column; \}\
+    .header-right \{ display: none; \}\
+  \}\
+\
+  /* \uc0\u9472 \u9472  PASSWORD GATE \u9472 \u9472  */\
+  #gate \{ position:fixed; inset:0; background:var(--navy); display:flex; align-items:center; justify-content:center; z-index:9999; padding:24px; \}\
+  #gate.hidden \{ display:none; \}\
+  .gate-box \{ background:var(--cream); border-radius:14px; padding:48px 44px; max-width:420px; width:100%; text-align:center; box-shadow:0 24px 60px rgba(0,0,0,0.35); \}\
+  .gate-logo \{ width:52px; height:52px; border-radius:50%; background:var(--navy); display:flex; align-items:center; justify-content:center; margin:0 auto 20px; \}\
+  .gate-box h2 \{ font-family:"DM Serif Display",serif; font-size:24px; color:var(--navy); margin-bottom:6px; \}\
+  .gate-box p \{ font-size:13.5px; color:rgba(27,39,66,0.5); margin-bottom:28px; line-height:1.6; \}\
+  #gate-password \{ width:100%; background:white; border:1.5px solid rgba(27,39,66,0.15); border-radius:8px; padding:13px 16px; font-family:"DM Sans",sans-serif; font-size:15px; color:var(--navy); outline:none; letter-spacing:0.08em; text-align:center; margin-bottom:10px; transition:border-color 0.2s,box-shadow 0.2s; \}\
+  #gate-password:focus \{ border-color:var(--orange); box-shadow:0 0 0 3px var(--orange-light); \}\
+  #gate-password.shake \{ animation:shake 0.4s ease; border-color:#c0392b; \}\
+  @keyframes shake \{ 0%,100%\{transform:translateX(0)\} 20%\{transform:translateX(-8px)\} 40%\{transform:translateX(8px)\} 60%\{transform:translateX(-6px)\} 80%\{transform:translateX(6px)\} \}\
+  #gate-error \{ font-size:12.5px; color:#c0392b; margin-bottom:12px; min-height:18px; font-weight:500; \}\
+  #gate-submit \{ width:100%; background:var(--orange); color:white; border:none; border-radius:8px; padding:13px; font-family:"DM Sans",sans-serif; font-size:14.5px; font-weight:600; cursor:pointer; transition:background 0.2s,transform 0.15s; box-shadow:0 4px 14px rgba(255,103,49,0.28); \}\
+  #gate-submit:hover \{ background:#e5541f; transform:translateY(-1px); \}\
+  .gate-hint \{ font-size:11.5px; color:rgba(27,39,66,0.35); margin-top:18px; line-height:1.5; \}\
+  #page-content \{ display:none; \}\
+  #page-content.unlocked \{ display:block; \}\
+</style>\
+</head>\
+<body>\
+\
+<!-- PASSWORD GATE -->\
+<div id="gate">\
+  <div class="gate-box">\
+    <div class="gate-logo">\
+      <svg viewBox="0 0 36 36" width="28" height="28" fill="none"><circle cx="18" cy="18" r="17" fill="#1a5cff"/><path d="M18 1 C9.163 1 2 8.163 2 17 C2 25.837 9.163 33 18 33 Z" fill="white"/></svg>\
+    </div>\
+    <h2>Ambio Intelligence</h2>\
+    <p>This form is for authorized Ambio partners only.<br>Enter your access password to continue.</p>\
+    <input type="password" id="gate-password" placeholder="Enter password" autocomplete="current-password" />\
+    <div id="gate-error"></div>\
+    <button id="gate-submit">Unlock \uc0\u8594 </button>\
+    <div class="gate-hint">Contact the Ambio team if you need access.</div>\
+  </div>\
+</div>\
+\
+<!-- PAGE CONTENT -->\
+<div id="page-content">\
+\
+<!-- HEADER -->\
+<header>\
+  <div class="logo-lockup">\
+    <div class="logo-icon">\
+      <svg viewBox="0 0 36 36" width="30" height="30" fill="none" xmlns="http://www.w3.org/2000/svg">\
+        <circle cx="18" cy="18" r="17" fill="#1a5cff"/>\
+        <path d="M18 1 C9.163 1 2 8.163 2 17 C2 25.837 9.163 33 18 33 Z" fill="white"/>\
+      </svg>\
+    </div>\
+    <div class="logo-text">\
+      <div class="brand">Ambio Branding</div>\
+      <div class="sub">Intelligence Intake</div>\
+    </div>\
+  </div>\
+  <div class="header-right">Business Development \'b7 Weekly Report</div>\
+</header>\
+\
+<!-- TOGGLE BAND -->\
+<div class="toggle-band">\
+  <div class="toggle-headline">\
+    What are you <em>submitting</em> today?\
+  </div>\
+\
+  <div class="mode-switcher">\
+    <button class="mode-btn active" id="btn-quick" onclick="switchMode('quick')">\uc0\u9889  Quick Drop</button>\
+    <button class="mode-btn" id="btn-full" onclick="switchMode('full')">\uc0\u55357 \u56523  Full Submission</button>\
+  </div>\
+\
+  <div class="mode-desc">\
+    <div class="mode-pill active-desc" id="desc-quick">\
+      <div class="mode-pill-dot"></div>\
+      5 fields \'b7 under 2 minutes\
+    </div>\
+    <div class="mode-pill" id="desc-full">\
+      <div class="mode-pill-dot"></div>\
+      Full detail \'b7 outreach angles \'b7 rolodex upload\
+    </div>\
+  </div>\
+</div>\
+\
+<!-- MAIN -->\
+<div class="container">\
+\
+  <!-- \uc0\u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \
+       QUICK DROP FORM\
+  \uc0\u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552  -->\
+  <form id="form-quick" class="form-panel visible" novalidate>\
+\
+    <div id="success-quick" class="success-banner">\
+      <div class="success-icon">\
+        <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M3 9l4.5 4.5 7.5-9" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>\
+      </div>\
+      <div class="success-text">\
+        <p>Intel dropped. Thanks!</p>\
+        <span>This will be reviewed for the next weekly report cycle.</span>\
+      </div>\
+    </div>\
+\
+    <div class="quick-stack">\
+\
+      <!-- Who -->\
+      <div class="quick-card">\
+        <div class="card-label">Who's submitting <span class="req-badge">Required</span></div>\
+        <div class="quick-inline">\
+          <div class="field">\
+            <input type="text" name="q_name" placeholder="Your name" required />\
+          </div>\
+          <div class="field">\
+            <select name="q_role" required>\
+              <option value="" disabled selected>Your role</option>\
+              <option>Ambio Branding \'97 Founder</option>\
+              <option>Molly Waller Consulting \'97 Partner</option>\
+              <option>Field Day Studios \'97 Partner</option>\
+              <option>Ambio Team Member</option>\
+              <option>Other</option>\
+            </select>\
+          </div>\
+        </div>\
+      </div>\
+\
+      <!-- Company -->\
+      <div class="quick-card">\
+        <div class="card-label">Company you're reporting on <span class="req-badge">Required</span></div>\
+        <div class="quick-inline">\
+          <div class="field">\
+            <input type="text" name="q_company" placeholder="Target company name" required />\
+          </div>\
+          <div class="field">\
+            <select name="q_status">\
+              <option value="" disabled selected>Their status (optional)</option>\
+              <option>Current Client</option>\
+              <option>Former Client</option>\
+              <option>Prospect \'97 Warm</option>\
+              <option>Prospect \'97 Cold</option>\
+              <option>Competitor to Watch</option>\
+            </select>\
+          </div>\
+        </div>\
+      </div>\
+\
+      <!-- Signal -->\
+      <div class="quick-card">\
+        <div class="card-label">What happened? <span class="req-badge">Required</span></div>\
+        <div class="pill-group" style="margin-bottom:12px;" id="q-signal-group">\
+          <input type="checkbox" id="qs1" name="q_signal[]" value="Executive / Leadership Change" />\
+          <label for="qs1">Leadership Change</label>\
+          <input type="checkbox" id="qs2" name="q_signal[]" value="M&A or Acquisition" />\
+          <label for="qs2">M&A / Acquisition</label>\
+          <input type="checkbox" id="qs3" name="q_signal[]" value="Funding Round" />\
+          <label for="qs3">Funding Round</label>\
+          <input type="checkbox" id="qs4" name="q_signal[]" value="Rebrand" />\
+          <label for="qs4">Rebrand</label>\
+          <input type="checkbox" id="qs5" name="q_signal[]" value="Product Launch" />\
+          <label for="qs5">Product Launch</label>\
+          <input type="checkbox" id="qs6" name="q_signal[]" value="Agency Shift" />\
+          <label for="qs6">Agency Shift</label>\
+          <input type="checkbox" id="qs7" name="q_signal[]" value="Partnership" />\
+          <label for="qs7">Partnership</label>\
+          <input type="checkbox" id="qs8" name="q_signal[]" value="Other" />\
+          <label for="qs8">Other</label>\
+          <input type="checkbox" id="qs9" name="q_signal[]" value="PE Firm Outreach" />\
+          <label for="qs9">PE Firm Reached Out to Ambio</label>\
+        </div>\
+        <textarea name="q_description" placeholder="Quick summary \'97 what happened?" required style="min-height:72px;"></textarea>\
+      </div>\
+\
+      <!-- Ambio Connection -->\
+      <div class="quick-card">\
+        <div class="card-label">Ambio connection <span class="req-badge">Required</span></div>\
+        <select name="q_connection" required>\
+          <option value="" disabled selected>Select the closest match</option>\
+          <option>Executive came from an Ambio client</option>\
+          <option>Shared PE firm or investor with an Ambio client</option>\
+          <option>Merging with / acquiring an Ambio client</option>\
+          <option>Shared board member with an Ambio client</option>\
+          <option>Personal / direct referral</option>\
+          <option>Haveli broker contact</option>\
+          <option>No known connection</option>\
+        </select>\
+      </div>\
+\
+      <!-- Optional extras -->\
+      <div class="quick-card">\
+        <div class="card-label">Anything else? <span class="opt-badge">Optional</span></div>\
+        <div class="field" style="margin-bottom:12px;">\
+          <div style="font-size:12px; color:rgba(27,39,66,0.5); margin-bottom:8px;">Suggested priority</div>\
+          <div class="priority-group">\
+            <input type="radio" name="q_priority" id="qp_high" value="high" />\
+            <label for="qp_high">\uc0\u55357 \u56628  Reach Out Now</label>\
+            <input type="radio" name="q_priority" id="qp_med" value="medium" />\
+            <label for="qp_med">\uc0\u55357 \u57313  Monitor Closely</label>\
+            <input type="radio" name="q_priority" id="qp_low" value="low" />\
+            <label for="qp_low">\uc0\u55357 \u57314  Long-Term Watch</label>\
+          </div>\
+        </div>\
+        <div class="field">\
+          <input type="text" name="q_source" placeholder="Source URL (optional)" />\
+        </div>\
+      </div>\
+\
+    </div><!-- /quick-stack -->\
+\
+    <div class="submit-area">\
+      <div class="submit-note">Takes under 2 minutes. Need to add more detail? Switch to Full Submission above.</div>\
+      <button type="submit">Drop Intel \uc0\u8594 </button>\
+    </div>\
+\
+  </form>\
+\
+\
+  <!-- \uc0\u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \
+       FULL SUBMISSION FORM\
+  \uc0\u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552 \u9552  -->\
+  <form id="form-full" class="form-panel" novalidate>\
+\
+    <div id="success-full" class="success-banner">\
+      <div class="success-icon">\
+        <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M3 9l4.5 4.5 7.5-9" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>\
+      </div>\
+      <div class="success-text">\
+        <p>Full submission received.</p>\
+        <span>This will be prioritized in the next weekly report cycle.</span>\
+      </div>\
+    </div>\
+\
+    <!-- 1. Who -->\
+    <div class="section">\
+      <div class="section-label">\
+        <div class="section-num">1</div>\
+        <div>\
+          <div class="section-title">Who's Submitting</div>\
+          <div class="section-desc">So we know where this intel is coming from.</div>\
+        </div>\
+      </div>\
+      <div class="long-card">\
+        <div class="field-row">\
+          <div class="field">\
+            <label>Your Name <span class="req">*</span></label>\
+            <input type="text" name="f_name" placeholder="e.g. Sarah Ambio" required />\
+          </div>\
+          <div class="field">\
+            <label>Your Role <span class="req">*</span></label>\
+            <select name="f_role" required>\
+              <option value="" disabled selected>Select your role</option>\
+              <option>Ambio Branding \'97 Founder</option>\
+              <option>Molly Waller Consulting \'97 Partner</option>\
+              <option>Field Day Studios \'97 Partner</option>\
+              <option>Ambio Team Member</option>\
+              <option>Other</option>\
+            </select>\
+          </div>\
+        </div>\
+        <div class="field-row">\
+          <div class="field">\
+            <label>Email <span class="opt">(optional)</span></label>\
+            <input type="email" name="f_email" placeholder="you@ambiobranding.com" />\
+          </div>\
+          <div class="field">\
+            <label>Date</label>\
+            <input type="date" name="f_date" id="f_date" />\
+          </div>\
+        </div>\
+      </div>\
+    </div>\
+\
+    <!-- 2. Company -->\
+    <div class="section">\
+      <div class="section-label">\
+        <div class="section-num">2</div>\
+        <div>\
+          <div class="section-title">Company You're Reporting On</div>\
+          <div class="section-desc">Tell us about the target company \'97 not your own.</div>\
+        </div>\
+      </div>\
+      <div class="long-card">\
+        <div class="field-row">\
+          <div class="field">\
+            <label>Company Name <span class="req">*</span></label>\
+            <input type="text" name="f_company" placeholder="e.g. Numerator" required />\
+          </div>\
+          <div class="field">\
+            <label>Company Status</label>\
+            <select name="f_status">\
+              <option value="" disabled selected>Select status</option>\
+              <option>Current Client</option>\
+              <option>Former Client</option>\
+              <option>Prospect \'97 Warm</option>\
+              <option>Prospect \'97 Cold</option>\
+              <option>Competitor to Watch</option>\
+              <option>Other</option>\
+            </select>\
+          </div>\
+        </div>\
+        <div class="field-row">\
+          <div class="field">\
+            <label>Product Category / Vertical</label>\
+            <input type="text" name="f_category" placeholder="e.g. HR Tech, FinTech, MarTech" />\
+          </div>\
+          <div class="field">\
+            <label>PE Firm</label>\
+            <select name="f_pe">\
+              <option value="" disabled selected>Select or leave blank</option>\
+              <option>Vista Equity</option>\
+              <option>Thoma Bravo</option>\
+              <option>Bain Capital</option>\
+              <option>KKR</option>\
+              <option>Advent International</option>\
+              <option>Madison Dearborn</option>\
+              <option>Francisco Partners</option>\
+              <option>Carlyle</option>\
+              <option>TA Associates</option>\
+              <option>Roper Technologies</option>\
+              <option>Haveli Investments</option>\
+              <option>Other / Unknown</option>\
+            </select>\
+          </div>\
+        </div>\
+        <div class="field">\
+          <label>Company Website or LinkedIn <span class="opt">(optional)</span></label>\
+          <input type="url" name="f_url" placeholder="https://" />\
+        </div>\
+      </div>\
+    </div>\
+\
+    <!-- 3. Signal -->\
+    <div class="section">\
+      <div class="section-label">\
+        <div class="section-num">3</div>\
+        <div>\
+          <div class="section-title">Signal or Triggering Event</div>\
+          <div class="section-desc">What happened? Select all that apply and describe.</div>\
+        </div>\
+      </div>\
+      <div class="long-card">\
+        <div class="field">\
+          <label>Signal Type(s) <span class="req">*</span></label>\
+          <div class="pill-group" id="f-signal-group" style="margin-top:4px;">\
+            <input type="checkbox" id="fs1" name="f_signal[]" value="Executive / Leadership Change" />\
+            <label for="fs1">Leadership Change</label>\
+            <input type="checkbox" id="fs2" name="f_signal[]" value="M&A or Acquisition" />\
+            <label for="fs2">M&A / Acquisition</label>\
+            <input type="checkbox" id="fs3" name="f_signal[]" value="Funding Round" />\
+            <label for="fs3">Funding Round</label>\
+            <input type="checkbox" id="fs4" name="f_signal[]" value="Rebrand or Brand Refresh" />\
+            <label for="fs4">Rebrand</label>\
+            <input type="checkbox" id="fs5" name="f_signal[]" value="Product Launch or Expansion" />\
+            <label for="fs5">Product Launch</label>\
+            <input type="checkbox" id="fs6" name="f_signal[]" value="Agency of Record Shift" />\
+            <label for="fs6">Agency Shift</label>\
+            <input type="checkbox" id="fs7" name="f_signal[]" value="New Partnership" />\
+            <label for="fs7">Partnership</label>\
+            <input type="checkbox" id="fs8" name="f_signal[]" value="Geographic Expansion" />\
+            <label for="fs8">Geo Expansion</label>\
+            <input type="checkbox" id="fs9" name="f_signal[]" value="Other" />\
+            <label for="fs9">Other</label>\
+            <input type="checkbox" id="fs10" name="f_signal[]" value="PE Firm Outreach" />\
+            <label for="fs10">PE Firm Reached Out to Ambio</label>\
+          </div>\
+        </div>\
+        <div class="field">\
+          <label>Describe the Event <span class="req">*</span></label>\
+          <textarea name="f_description" placeholder="What happened? Include names, dates, and any relevant context." required></textarea>\
+        </div>\
+        <div class="field-row">\
+          <div class="field">\
+            <label>Approximate Event Date</label>\
+            <input type="date" name="f_event_date" />\
+          </div>\
+          <div class="field">\
+            <label>Source URL <span class="opt">(optional)</span></label>\
+            <input type="url" name="f_source" placeholder="https://" />\
+          </div>\
+        </div>\
+      </div>\
+    </div>\
+\
+    <!-- 4. Connection -->\
+    <div class="section">\
+      <div class="section-label">\
+        <div class="section-num">4</div>\
+        <div>\
+          <div class="section-title">Ambio Connection</div>\
+          <div class="section-desc">Is there a traceable relationship to Ambio's ecosystem?</div>\
+        </div>\
+      </div>\
+      <div class="long-card">\
+        <div class="field">\
+          <label>Connection Type <span class="req">*</span></label>\
+          <select name="f_connection" required>\
+            <option value="" disabled selected>Select the closest match</option>\
+            <option>Executive came from an Ambio client</option>\
+            <option>Shared PE firm or investor with an Ambio client</option>\
+            <option>Merging with / acquiring an Ambio client</option>\
+            <option>Shared board member with an Ambio client</option>\
+            <option>Personal / direct referral</option>\
+            <option>Haveli broker contact</option>\
+            <option>No known connection</option>\
+          </select>\
+        </div>\
+        <div class="field">\
+          <label>Connection Details <span class="opt">(optional)</span></label>\
+          <textarea name="f_connection_detail" placeholder="Names, prior company, role, how you found out \'97 anything specific helps." style="min-height:72px;"></textarea>\
+        </div>\
+      </div>\
+    </div>\
+\
+    <!-- 5. Your Take \'97 OPTIONAL -->\
+    <div class="section">\
+      <div class="section-label">\
+        <div class="section-num">5</div>\
+        <div>\
+          <div class="section-title">Your Take <span style="font-family:'DM Sans',sans-serif; font-size:12px; font-weight:400; color:rgba(27,39,66,0.4); margin-left:8px;">\'97 Optional</span></div>\
+          <div class="section-desc">Skip this if you're short on time. Add it if you have a recommendation.</div>\
+        </div>\
+      </div>\
+      <div class="long-card">\
+        <div class="field">\
+          <label>Suggested Priority</label>\
+          <div class="priority-group" style="margin-top:4px;">\
+            <input type="radio" name="f_priority" id="fp_high" value="high" />\
+            <label for="fp_high">\uc0\u55357 \u56628  Reach Out Now</label>\
+            <input type="radio" name="f_priority" id="fp_med" value="medium" />\
+            <label for="fp_med">\uc0\u55357 \u57313  Monitor Closely</label>\
+            <input type="radio" name="f_priority" id="fp_low" value="low" />\
+            <label for="fp_low">\uc0\u55357 \u57314  Long-Term Watch</label>\
+          </div>\
+        </div>\
+        <div class="field">\
+          <label>Recommended Outreach Angle</label>\
+          <textarea name="f_outreach" placeholder="How should Ambio approach this? What's the opening line or service to lead with?" style="min-height:76px;"></textarea>\
+        </div>\
+        <div class="field">\
+          <label>Additional Notes</label>\
+          <textarea name="f_notes" placeholder="Timing considerations, risks, context \'97 anything else we should know." style="min-height:64px;"></textarea>\
+        </div>\
+      </div>\
+    </div>\
+\
+    <!-- 6. New Client / Rolodex \'97 OPTIONAL -->\
+    <div class="section">\
+      <div class="section-label">\
+        <div class="section-num">6</div>\
+        <div>\
+          <div class="section-title">New Client or Rolodex Update <span style="font-family:'DM Sans',sans-serif; font-size:12px; font-weight:400; color:rgba(27,39,66,0.4); margin-left:8px;">\'97 Optional</span></div>\
+          <div class="section-desc">Adding a new client to the roster, or uploading a fresh Client Rolodex? Do it here.</div>\
+        </div>\
+      </div>\
+      <div class="long-card">\
+        <div class="field-row">\
+          <div class="field">\
+            <label>New Client Name</label>\
+            <input type="text" name="f_new_client" placeholder="Company name" />\
+          </div>\
+          <div class="field">\
+            <label>Engagement Start Date</label>\
+            <input type="date" name="f_engage_date" />\
+          </div>\
+        </div>\
+        <div class="field">\
+          <label>New Client Details</label>\
+          <textarea name="f_new_client_detail" placeholder="Services, scope, key contacts, anything relevant for the BD report." style="min-height:72px;"></textarea>\
+        </div>\
+        <hr class="divider" />\
+        <div class="field">\
+          <label>Upload Updated Rolodex <span class="opt">(optional)</span></label>\
+          <div class="upload-zone" id="upload-zone">\
+            <input type="file" name="f_rolodex" id="rolodex-file" accept=".xlsx,.xls,.csv" />\
+            <div class="upload-icon">\
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 13V4M6 8l4-4 4 4" stroke="#1b2742" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 14v1.5A1.5 1.5 0 004.5 17h11a1.5 1.5 0 001.5-1.5V14" stroke="#1b2742" stroke-width="1.8" stroke-linecap="round"/></svg>\
+            </div>\
+            <p>Drag & drop or click to browse</p>\
+            <span>Accepts .xlsx, .xls, .csv</span>\
+            <div class="file-name-display" id="file-name"></div>\
+          </div>\
+          <div class="hint" style="margin-top:6px;">Only upload if you have a full updated rolodex. Use the fields above for individual clients.</div>\
+        </div>\
+      </div>\
+    </div>\
+\
+    <div class="submit-area">\
+      <div class="submit-note">Your full submission will be prioritized in the next report cycle. All information stays internal.</div>\
+      <button type="submit">Submit Full Report \uc0\u8594 </button>\
+    </div>\
+\
+  </form>\
+\
+</div><!-- /container -->\
+\
+<script>\
+  // \uc0\u9472 \u9472  Set today's date\
+  document.getElementById('f_date').valueAsDate = new Date();\
+\
+  // \uc0\u9472 \u9472  Mode switch\
+  function switchMode(mode) \{\
+    const isQuick = mode === 'quick';\
+\
+    document.getElementById('form-quick').classList.toggle('visible', isQuick);\
+    document.getElementById('form-full').classList.toggle('visible', !isQuick);\
+\
+    document.getElementById('btn-quick').classList.toggle('active', isQuick);\
+    document.getElementById('btn-full').classList.toggle('active', !isQuick);\
+\
+    document.getElementById('desc-quick').classList.toggle('active-desc', isQuick);\
+    document.getElementById('desc-full').classList.toggle('active-desc', !isQuick);\
+\
+    // Update dot styles\
+    document.querySelectorAll('.mode-pill-dot').forEach((dot, i) => \{\
+      dot.style.background = (isQuick && i === 0) || (!isQuick && i === 1)\
+        ? 'var(--orange)'\
+        : 'rgba(255,250,238,0.2)';\
+    \});\
+  \}\
+\
+  // \uc0\u9472 \u9472  File upload display + validation\
+  function handleFileSelect(file) \{\
+    if (!file) return;\
+    const fileNameEl = document.getElementById('file-name');\
+    const ext = file.name.split('.').pop().toLowerCase();\
+    if (!['xlsx','xls','csv'].includes(ext)) \{\
+      fileNameEl.style.color = '#c0392b';\
+      fileNameEl.textContent = '\\u2717 Only .xlsx, .xls, or .csv files are accepted.';\
+      document.getElementById('rolodex-file').value = '';\
+      return;\
+    \}\
+    if (file.size > 10 * 1024 * 1024) \{\
+      fileNameEl.style.color = '#c0392b';\
+      fileNameEl.textContent = '\\u2717 File is too large. Maximum size is 10 MB.';\
+      document.getElementById('rolodex-file').value = '';\
+      return;\
+    \}\
+    fileNameEl.style.color = 'var(--orange)';\
+    fileNameEl.textContent = '\\ud83d\\udcce ' + file.name + ' (' + (file.size / 1024).toFixed(0) + ' KB)';\
+  \}\
+\
+  document.getElementById('rolodex-file').addEventListener('change', function() \{\
+    handleFileSelect(this.files[0]);\
+  \});\
+\
+  const zone = document.getElementById('upload-zone');\
+  zone.addEventListener('dragover', e => \{ e.preventDefault(); zone.classList.add('dragover'); \});\
+  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));\
+  zone.addEventListener('drop', e => \{\
+    e.preventDefault();\
+    zone.classList.remove('dragover');\
+    const file = e.dataTransfer.files[0];\
+    if (file) \{\
+      const dt = new DataTransfer();\
+      dt.items.add(file);\
+      document.getElementById('rolodex-file').files = dt.files;\
+      handleFileSelect(file);\
+    \}\
+  \});\
+\
+  // \uc0\u9472 \u9472  Convert file to base64\
+  function fileToBase64(file) \{\
+    return new Promise((resolve, reject) => \{\
+      const reader = new FileReader();\
+      reader.onload  = () => resolve(reader.result.split(',')[1]);\
+      reader.onerror = () => reject(new Error('File could not be read.'));\
+      reader.readAsDataURL(file);\
+    \});\
+  \}\
+\
+  // \uc0\u9472 \u9472  PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyEgTu8YbEcbczN65tFYBMWTt6oSa54a7A8bXJaRyJvH-BDbm0kxsZeMCmf_kbs4NVY/exec';\
+  // \uc0\u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \
+\
+  // \uc0\u9472 \u9472  Validation helper\
+  function validateForm(form, signalGroupId) \{\
+    let valid = true;\
+\
+    form.querySelectorAll('[required]').forEach(field => \{\
+      field.classList.remove('error');\
+      if (!field.value.trim()) \{\
+        field.classList.add('error');\
+        valid = false;\
+      \}\
+    \});\
+\
+    // Require at least one signal pill\
+    const signals = form.querySelectorAll('input[type="checkbox"]:checked');\
+    if (signals.length === 0) \{\
+      const group = document.getElementById(signalGroupId);\
+      if (group) \{\
+        group.style.outline = '2px solid var(--orange)';\
+        group.style.borderRadius = '8px';\
+        group.style.padding = '6px';\
+        valid = false;\
+        setTimeout(() => \{ group.style.outline = ''; group.style.padding = ''; \}, 2500);\
+      \}\
+    \}\
+\
+    return valid;\
+  \}\
+\
+  // \uc0\u9472 \u9472  Set button to loading state\
+  function setLoading(btn, isLoading) \{\
+    btn.disabled = isLoading;\
+    btn.textContent = isLoading ? 'Sending\'85' : btn.dataset.label;\
+    btn.style.opacity = isLoading ? '0.7' : '1';\
+  \}\
+\
+  // \uc0\u9472 \u9472  POST to Google Sheets\
+  async function sendToSheets(payload) \{\
+    const res = await fetch(SCRIPT_URL, \{\
+      method: 'POST',\
+      body: JSON.stringify(payload)\
+    \});\
+    const json = await res.json();\
+    if (json.status !== 'success') throw new Error(json.message || 'Unknown error');\
+  \}\
+\
+  // \uc0\u9472 \u9472  Show success banner\
+  function showSuccess(bannerId, form, extraReset) \{\
+    const banner = document.getElementById(bannerId);\
+    banner.classList.add('show');\
+    form.reset();\
+    if (extraReset) extraReset();\
+    window.scrollTo(\{ top: 0, behavior: 'smooth' \});\
+    setTimeout(() => banner.classList.remove('show'), 8000);\
+  \}\
+\
+  // \uc0\u9472 \u9472  Show inline error\
+  function showError(bannerId, msg) \{\
+    const banner = document.getElementById(bannerId);\
+    banner.style.borderLeftColor = '#c0392b';\
+    banner.querySelector('p').textContent = 'Something went wrong.';\
+    banner.querySelector('span').textContent = msg || 'Please try again or contact the Ambio team.';\
+    banner.querySelector('.success-icon').style.background = '#c0392b';\
+    banner.classList.add('show');\
+    setTimeout(() => \{\
+      banner.classList.remove('show');\
+      banner.style.borderLeftColor = '';\
+      banner.querySelector('.success-icon').style.background = '';\
+    \}, 8000);\
+  \}\
+\
+  // Store button labels\
+  document.querySelectorAll('button[type="submit"]').forEach(btn => \{\
+    btn.dataset.label = btn.textContent;\
+  \});\
+\
+  // \uc0\u9472 \u9472  QUICK FORM \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \
+  document.getElementById('form-quick').addEventListener('submit', async function(e) \{\
+    e.preventDefault();\
+    if (!validateForm(this, 'q-signal-group')) \{\
+      this.querySelector('.error')?.scrollIntoView(\{ behavior: 'smooth', block: 'center' \});\
+      return;\
+    \}\
+\
+    const btn = this.querySelector('button[type="submit"]');\
+    setLoading(btn, true);\
+\
+    const signals = [...this.querySelectorAll('input[name="q_signal[]"]:checked')]\
+      .map(cb => cb.value).join(', ');\
+\
+    const payload = \{\
+      formType:    'quick',\
+      name:        this.q_name.value,\
+      role:        this.q_role.value,\
+      company:     this.q_company.value,\
+      status:      this.q_status.value,\
+      signals,\
+      description: this.q_description.value,\
+      connection:  this.q_connection.value,\
+      priority:    this.querySelector('input[name="q_priority"]:checked')?.value || '',\
+      source:      this.q_source.value\
+    \};\
+\
+    try \{\
+      await sendToSheets(payload);\
+      showSuccess('success-quick', this);\
+    \} catch (err) \{\
+      showError('success-quick', err.message);\
+    \} finally \{\
+      setLoading(btn, false);\
+    \}\
+  \});\
+\
+  // \uc0\u9472 \u9472  FULL FORM \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \
+  document.getElementById('form-full').addEventListener('submit', async function(e) \{\
+    e.preventDefault();\
+    if (!validateForm(this, 'f-signal-group')) \{\
+      this.querySelector('.error')?.scrollIntoView(\{ behavior: 'smooth', block: 'center' \});\
+      return;\
+    \}\
+\
+    const btn = this.querySelector('button[type="submit"]');\
+    setLoading(btn, true);\
+\
+    const signals = [...this.querySelectorAll('input[name="f_signal[]"]:checked')]\
+      .map(cb => cb.value).join(', ');\
+\
+    const rolodexFile = document.getElementById('rolodex-file').files[0];\
+\
+    // Encode file as base64 if present, then send\
+    let rolodexBase64   = '';\
+    let rolodexFileName = '';\
+    let rolodexMimeType = '';\
+\
+    if (rolodexFile) \{\
+      try \{\
+        rolodexBase64   = await fileToBase64(rolodexFile);\
+        rolodexFileName = rolodexFile.name;\
+        rolodexMimeType = rolodexFile.type || 'application/octet-stream';\
+      \} catch (fileErr) \{\
+        showError('success-full', 'Could not read the file. Please try again.');\
+        setLoading(btn, false);\
+        return;\
+      \}\
+    \}\
+\
+    const payload = \{\
+      formType:          'full',\
+      name:              this.f_name.value,\
+      role:              this.f_role.value,\
+      email:             this.f_email.value,\
+      submissionDate:    this.f_date.value,\
+      company:           this.f_company.value,\
+      status:            this.f_status.value,\
+      category:          this.f_category.value,\
+      peFirm:            this.f_pe.value,\
+      companyUrl:        this.f_url.value,\
+      signals,\
+      description:       this.f_description.value,\
+      eventDate:         this.f_event_date.value,\
+      sourceUrl:         this.f_source.value,\
+      connectionType:    this.f_connection.value,\
+      connectionDetail:  this.f_connection_detail.value,\
+      priority:          this.querySelector('input[name="f_priority"]:checked')?.value || '',\
+      outreach:          this.f_outreach.value,\
+      notes:             this.f_notes.value,\
+      newClient:         this.f_new_client.value,\
+      engageDate:        this.f_engage_date.value,\
+      newClientDetail:   this.f_new_client_detail.value,\
+      rolodexFileName,\
+      rolodexMimeType,\
+      rolodexBase64\
+    \};\
+\
+    try \{\
+      await sendToSheets(payload);\
+      showSuccess('success-full', this, () => \{\
+        document.getElementById('f_date').valueAsDate = new Date();\
+        document.getElementById('file-name').textContent = '';\
+      \});\
+    \} catch (err) \{\
+      showError('success-full', err.message);\
+    \} finally \{\
+      setLoading(btn, false);\
+    \}\
+  \});\
+\
+  // \uc0\u9472 \u9472  PASSWORD GATE \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \
+  const CORRECT_PASSWORD = "ClaireDanes2026!";\
+  const SESSION_KEY = "ambio_intake_auth";\
+\
+  function unlock() \{\
+    document.getElementById("gate").classList.add("hidden");\
+    document.getElementById("page-content").classList.add("unlocked");\
+    sessionStorage.setItem(SESSION_KEY, "1");\
+  \}\
+\
+  // Auto-unlock if already authenticated this session\
+  if (sessionStorage.getItem(SESSION_KEY) === "1") \{ unlock(); \}\
+\
+  document.getElementById("gate-submit").addEventListener("click", function() \{\
+    const val = document.getElementById("gate-password").value;\
+    const errEl = document.getElementById("gate-error");\
+    const input = document.getElementById("gate-password");\
+    if (val === CORRECT_PASSWORD) \{\
+      unlock();\
+    \} else \{\
+      errEl.textContent = "Incorrect password. Please try again.";\
+      input.classList.remove("shake");\
+      void input.offsetWidth;\
+      input.classList.add("shake");\
+      input.value = "";\
+      setTimeout(() => \{ input.classList.remove("shake"); errEl.textContent = ""; \}, 2500);\
+    \}\
+  \});\
+\
+  document.getElementById("gate-password").addEventListener("keydown", function(e) \{\
+    if (e.key === "Enter") document.getElementById("gate-submit").click();\
+  \});\
+</script>\
+</div><!-- /page-content -->\
+</body>\
+</html>}
